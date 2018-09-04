@@ -92,8 +92,8 @@ namespace payssion
 
         protected Dictionary<string, string[]> sig_keys_arr = new Dictionary<string, string[]>()
         { 
-            {"create",new string[]{"api_key","pm_id","amount","currency","order_id","secret_key"}}, 
-            {"details",new string[] { "api_key","transaction_id","order_id","secret_key" } } 
+            {"create",new string[]{"api_key","pm_id","amount","currency","order_id"}}, 
+            {"details",new string[] { "api_key","transaction_id","order_id"} } 
         };
         
        
@@ -108,6 +108,7 @@ namespace payssion
                 i++;
             }
             string msg = string.Join("|", msg_arr);
+            msg += "|" + this.secret_key;
             string md5 =System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(msg, "MD5").ToString();
             //byte[]   result   =   md5.ComputeHash(System.Text.Encoding.Default.GetBytes(msg));
            // string sig =System.Text.Encoding.Default.GetString(result);
@@ -118,7 +119,6 @@ namespace payssion
         {
             this.is_success = false;
             paras.Add("api_key", this.api_key);
-            paras.Add("secret_key", this.secret_key);
             paras.Add("api_sig", getSig(paras, method));
             Encoding encoding = Encoding.GetEncoding("utf-8");
             string response = this.pushData(method, request, paras, encoding);
